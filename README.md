@@ -1,26 +1,18 @@
 # Fake News Classifier — truDefender
 
-A machine learning web application that classifies news articles as **FAKE** or **REAL** using Natural Language Processing (NLP). Built with Flask and a Naive Bayes classifier trained on a labelled news dataset.
+A machine learning project that classifies news articles as **FAKE** or **REAL** using Natural Language Processing (NLP). Three classical models — Naive Bayes, Logistic Regression, and Stochastic Gradient Descent (SGD) — are trained and compared in the notebooks, and the best-suited model is served through a Flask web application called truDefender.
 
 ---
 
 ## Abstract
 
-Misinformation and fake news have become a significant challenge in the digital age. truDefender tackles this by leveraging NLP and machine learning to analyse the title and body of a news article and determine whether it is genuine or fabricated. The model is trained using a Naive Bayes classifier on a labelled news dataset, providing fast and reliable predictions through a clean web interface.
+Misinformation and fake news have become a significant challenge in the digital age. This project tackles that problem in two parts: the `notebooks/` directory explores and compares three NLP-based classifiers on a labelled news dataset, and `app/` serves the trained model through a clean web interface where a user can paste an article (or a URL to one) and get an instant FAKE/REAL prediction.
 
 ---
 
-## How It Works
+## Notebooks
 
-1. User enters a news **title** and **body text**
-2. The text is concatenated and passed to the trained Naive Bayes classifier
-3. The model outputs either **FAKE NEWS ⚠️** or **REAL NEWS 👍**
-
----
-
-## Model
-
-Three classification approaches were explored in the notebooks:
+The dataset and model comparison live in `notebooks/`:
 
 | Model | Notebook |
 |---|---|
@@ -28,58 +20,34 @@ Three classification approaches were explored in the notebooks:
 | Logistic Regression | `notebooks/news-classification-logistic-regression.ipynb` |
 | Stochastic Gradient Descent | `notebooks/news-classification-stochastic-gradient-descent.ipynb` |
 
-The best performing model is saved as `model/fake_news_classification.pkl` and served via the Flask app.
+Each notebook reads the shared dataset from `notebooks/dataset/news.csv`, vectorizes the article text (CountVectorizer or TF-IDF, depending on the notebook), trains its classifier, and reports test-set accuracy. The trained model used by the web app is exported as `app/model/fake_news_classification.pkl`.
 
----
-
-## Tech Stack
-
-| Category | Tools |
-|---|---|
-| Language | Python |
-| Web Framework | Flask |
-| ML / NLP | scikit-learn, joblib |
-| Data Handling | Pandas, NumPy |
-| Visualisation | Seaborn, Plotly |
-| Frontend | Bootstrap 5, Jinja2 |
-
----
-
-## Project Structure
-
-```
-fake_news_classifier/
-├── server.py                   # Flask web application
-├── fake_news_model.py          # Model loader and prediction logic
-├── requirements.txt
-├── model/
-│   ├── fake_news_classification.pkl          # Trained Naive Bayes model
-│   └── news.csv                              # Dataset
-├── notebooks/
-│   ├── Fake News Classifier.ipynb
-│   ├── news-classification-logistic-regression.ipynb
-│   └── news-classification-stochastic-gradient-descent.ipynb
-├── templates/
-│   ├── base.html
-│   ├── index.html
-│   └── fake_news.html
-└── static/
-    └── res/img/
-```
-
----
-
-## Requirements
-
-- Python 3.8+
-
+**To run a notebook:**
 ```bash
-pip install flask joblib scikit-learn seaborn
+cd notebooks
+jupyter notebook
 ```
 
 ---
 
-## Usage
+## Web Application
+
+truDefender is the Flask front-end for the trained model. A user enters a news **title** and **body text** (or a source URL), and the app returns either **FAKE NEWS ⚠️** or **REAL NEWS 👍**.
+
+| | |
+|---|---|
+| ![Front page](docs/screenshots/front_page.jpg) | ![Manual entry](docs/screenshots/manual_entry.jpg) |
+| Front page | Manually entering an article |
+| ![URL input](docs/screenshots/url_input.jpg) | ![Result](docs/screenshots/result_output.jpg) |
+| Classifying from a source URL | Classification result |
+
+### How It Works
+
+1. User enters a news **title** and **body text**, or pastes a source URL
+2. The text is concatenated and passed to the trained classifier
+3. The model outputs either **FAKE NEWS ⚠️** or **REAL NEWS 👍**
+
+### Usage
 
 **Step 1 — Clone the repository**
 ```bash
@@ -105,12 +73,65 @@ pip install -r requirements.txt
 
 **Step 4 — Run the app**
 ```bash
+cd app
 python server.py
 ```
 
 **Step 5 — Open in browser**
 
 Navigate to `http://127.0.0.1:5000`, enter a news title and body, and click **Check**.
+
+---
+
+## Tech Stack
+
+| Category | Tools |
+|---|---|
+| Language | Python |
+| Web Framework | Flask |
+| ML / NLP | scikit-learn, joblib |
+| Data Handling | Pandas, NumPy |
+| Visualisation | Seaborn, Plotly |
+| Frontend | Bootstrap 5, Jinja2 |
+
+---
+
+## Project Structure
+
+```
+fake_news_classifier/
+├── requirements.txt
+├── docs/
+│   └── screenshots/                          # Web app screenshots used in this README
+├── notebooks/
+│   ├── dataset/
+│   │   ├── news.csv
+│   │   └── news.zip
+│   ├── Fake News Classifier.ipynb
+│   ├── news-classification-logistic-regression.ipynb
+│   └── news-classification-stochastic-gradient-descent.ipynb
+└── app/
+    ├── server.py                   # Flask web application
+    ├── fake_news_model.py          # Model loader and prediction logic
+    ├── model/
+    │   └── fake_news_classification.pkl      # Trained model served by the app
+    ├── templates/
+    │   ├── base.html
+    │   ├── index.html
+    │   └── fake_news.html
+    └── static/
+        └── res/img/
+```
+
+---
+
+## Requirements
+
+- Python 3.8+
+
+```bash
+pip install flask joblib scikit-learn seaborn
+```
 
 ---
 
